@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from pathlib import Path
 
@@ -14,7 +15,12 @@ DATABASE = "flaskr.db"
 USERNAME = "admin"
 PASSWORD = "admin"
 SECRET_KEY = "change_me"
-SQLALCHEMY_DATABASE_URI = f'sqlite:///{Path(basedir).joinpath(DATABASE)}'
+url = os.getenv('DATABASE_URL', f'sqlite:///{Path(basedir).joinpath(DATABASE)}')
+
+if url.startswith("postgres://"):
+    url = url.replace("postgres://", "postgresql://", 1)
+
+SQLALCHEMY_DATABASE_URI = url
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -106,3 +112,6 @@ def search():
 
 # if __name__ == "__main__":
 #     app.run()
+
+# internal:  postgresql://ece444_pra03_flaskr_databse_user:iD5i1BLXsR2h7IwJFa96KhtLP1rGVL4c@dpg-crube63v2p9s73eoskmg-a/ece444_pra03_flaskr_databse
+# external:  postgresql://ece444_pra03_flaskr_databse_user:iD5i1BLXsR2h7IwJFa96KhtLP1rGVL4c@dpg-crube63v2p9s73eoskmg-a.oregon-postgres.render.com/ece444_pra03_flaskr_databse
